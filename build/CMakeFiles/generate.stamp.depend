@@ -10,6 +10,7 @@ C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeSystemSpecificInitialize.cma
 C:/Program Files/CMake/share/cmake-4.3/Modules/Compiler/CMakeCommonCompilerMacros.cmake
 C:/Program Files/CMake/share/cmake-4.3/Modules/Compiler/MSVC-CXX.cmake
 C:/Program Files/CMake/share/cmake-4.3/Modules/Compiler/MSVC.cmake
+C:/Program Files/CMake/share/cmake-4.3/Modules/FeatureSummary.cmake
 C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/CMakeCXXLinkerInformation.cmake
 C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/CMakeCommonLinkerInformation.cmake
 C:/Program Files/CMake/share/cmake-4.3/Modules/Linker/MSVC-CXX.cmake
@@ -25,3 +26,12 @@ C:/Users/lenovo/repos/Fog_Tracer/CMakeLists.txt
 C:/Users/lenovo/repos/Fog_Tracer/build/CMakeFiles/4.3.2/CMakeCXXCompiler.cmake
 C:/Users/lenovo/repos/Fog_Tracer/build/CMakeFiles/4.3.2/CMakeRCCompiler.cmake
 C:/Users/lenovo/repos/Fog_Tracer/build/CMakeFiles/4.3.2/CMakeSystem.cmake
+C:/vcpkg/installed/x64-windows/share/sdl2/SDL2Config.cmake
+C:/vcpkg/installed/x64-windows/share/sdl2/SDL2ConfigVersion.cmake
+C:/vcpkg/installed/x64-windows/share/sdl2/SDL2Targets-debug.cmake
+C:/vcpkg/installed/x64-windows/share/sdl2/SDL2Targets-release.cmake
+C:/vcpkg/installed/x64-windows/share/sdl2/SDL2Targets.cmake
+C:/vcpkg/installed/x64-windows/share/sdl2/SDL2mainTargets-debug.cmake
+C:/vcpkg/installed/x64-windows/share/sdl2/SDL2mainTargets-release.cmake
+C:/vcpkg/installed/x64-windows/share/sdl2/SDL2mainTargets.cmake
+C:/vcpkg/installed/x64-windows/share/sdl2/sdlfind.cmake

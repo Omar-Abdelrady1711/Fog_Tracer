@@ -1,45 +1,40 @@
 cmake_minimum_required(VERSION 3.16)
 project(RayTracer LANGUAGES CXX)
 
-# =============================================================================
-#  Compiler settings
-# =============================================================================
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Enable full optimizations for Release builds
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    if(MSVC)
-        add_compile_options(/O2)
-    else()
-        add_compile_options(-O3)
-    endif()
+# =============================================================================
+#  Compiler flags
+# =============================================================================
+if(MSVC)
+    add_compile_options(/W4 /EHsc /O2)
+else()
+    add_compile_options(-Wall -Wextra -Wpedantic -O2)
 endif()
 
-# Strict warnings to catch mistakes early
-if(MSVC)
-    add_compile_options(/W4 /EHsc)
-else()
-    add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
+# =============================================================================
+#  SDL2  (installed via vcpkg)
+# =============================================================================
+find_package(SDL2 CONFIG REQUIRED)
 
 # =============================================================================
 #  Sources
-#  Add new .cpp files here as your teammates create them (e.g. renderer.cpp)
 # =============================================================================
 set(SOURCES
     src/main.cpp
-    # src/renderer.cpp   <- uncomment when Person 3 adds this
 )
 
 add_executable(raytracer ${SOURCES})
 
-# Make all headers in src/ visible without path prefixes
 target_include_directories(raytracer PRIVATE src)
 
-# =============================================================================
-#  Output binary lands in the build folder
-# =============================================================================
+target_link_libraries(raytracer
+    PRIVATE
+    $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
+    $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
+)
+
 set_target_properties(raytracer PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
 )

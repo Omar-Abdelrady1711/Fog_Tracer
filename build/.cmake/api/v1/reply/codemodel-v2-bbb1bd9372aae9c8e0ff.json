@@ -2,10 +2,31 @@
 	"configurations" : 
 	[
 		{
-			"abstractTargets" : [],
+			"abstractTargets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "SDL2::SDL2::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-SDL2__SDL2-Debug-863d834fa6bdf7925b0e.json",
+					"name" : "SDL2::SDL2",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "SDL2::SDL2main::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-SDL2__SDL2main-Debug-df97417f4c2285f22a45.json",
+					"name" : "SDL2::SDL2main",
+					"projectIndex" : 0
+				}
+			],
 			"directories" : 
 			[
 				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1
+					],
 					"build" : ".",
 					"jsonFile" : "directory-.-Debug-f040eec181a89de70dbe.json",
 					"minimumCMakeVersion" : 
@@ -26,6 +47,11 @@
 			"projects" : 
 			[
 				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1
+					],
 					"directoryIndexes" : 
 					[
 						0
@@ -44,7 +70,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ALL_BUILD-Debug-d0996f047d5098c52e18.json",
+					"jsonFile" : "target-ALL_BUILD-Debug-8cadd3ef252660792a78.json",
 					"name" : "ALL_BUILD",
 					"projectIndex" : 0
 				},
@@ -58,17 +84,38 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "raytracer::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-raytracer-Debug-c045b1be4abb2e02011e.json",
+					"jsonFile" : "target-raytracer-Debug-f660c5d702f828ba99de.json",
 					"name" : "raytracer",
 					"projectIndex" : 0
 				}
 			]
 		},
 		{
-			"abstractTargets" : [],
+			"abstractTargets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "SDL2::SDL2::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-SDL2__SDL2-Release-74d4be793df1483397cd.json",
+					"name" : "SDL2::SDL2",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "SDL2::SDL2main::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-SDL2__SDL2main-Release-c490af53c267c66ca6e5.json",
+					"name" : "SDL2::SDL2main",
+					"projectIndex" : 0
+				}
+			],
 			"directories" : 
 			[
 				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1
+					],
 					"build" : ".",
 					"jsonFile" : "directory-.-Release-f040eec181a89de70dbe.json",
 					"minimumCMakeVersion" : 
@@ -89,6 +136,11 @@
 			"projects" : 
 			[
 				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1
+					],
 					"directoryIndexes" : 
 					[
 						0
@@ -107,7 +159,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ALL_BUILD-Release-d0996f047d5098c52e18.json",
+					"jsonFile" : "target-ALL_BUILD-Release-8cadd3ef252660792a78.json",
 					"name" : "ALL_BUILD",
 					"projectIndex" : 0
 				},
@@ -121,17 +173,38 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "raytracer::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-raytracer-Release-d0aaf6e3f313fb067e57.json",
+					"jsonFile" : "target-raytracer-Release-d0e20f5f7de614d2ecaa.json",
 					"name" : "raytracer",
 					"projectIndex" : 0
 				}
 			]
 		},
 		{
-			"abstractTargets" : [],
+			"abstractTargets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "SDL2::SDL2::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-SDL2__SDL2-MinSizeRel-863d834fa6bdf7925b0e.json",
+					"name" : "SDL2::SDL2",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "SDL2::SDL2main::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-SDL2__SDL2main-MinSizeRel-df97417f4c2285f22a45.json",
+					"name" : "SDL2::SDL2main",
+					"projectIndex" : 0
+				}
+			],
 			"directories" : 
 			[
 				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1
+					],
 					"build" : ".",
 					"jsonFile" : "directory-.-MinSizeRel-f040eec181a89de70dbe.json",
 					"minimumCMakeVersion" : 
@@ -152,6 +225,11 @@
 			"projects" : 
 			[
 				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1
+					],
 					"directoryIndexes" : 
 					[
 						0
@@ -170,7 +248,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ALL_BUILD-MinSizeRel-d0996f047d5098c52e18.json",
+					"jsonFile" : "target-ALL_BUILD-MinSizeRel-8cadd3ef252660792a78.json",
 					"name" : "ALL_BUILD",
 					"projectIndex" : 0
 				},
@@ -184,17 +262,38 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "raytracer::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-raytracer-MinSizeRel-adacb39987b770cc811d.json",
+					"jsonFile" : "target-raytracer-MinSizeRel-c5bd9df61beb4186fe01.json",
 					"name" : "raytracer",
 					"projectIndex" : 0
 				}
 			]
 		},
 		{
-			"abstractTargets" : [],
+			"abstractTargets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "SDL2::SDL2::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-SDL2__SDL2-RelWithDebInfo-863d834fa6bdf7925b0e.json",
+					"name" : "SDL2::SDL2",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "SDL2::SDL2main::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-SDL2__SDL2main-RelWithDebInfo-df97417f4c2285f22a45.json",
+					"name" : "SDL2::SDL2main",
+					"projectIndex" : 0
+				}
+			],
 			"directories" : 
 			[
 				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1
+					],
 					"build" : ".",
 					"jsonFile" : "directory-.-RelWithDebInfo-f040eec181a89de70dbe.json",
 					"minimumCMakeVersion" : 
@@ -215,6 +314,11 @@
 			"projects" : 
 			[
 				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1
+					],
 					"directoryIndexes" : 
 					[
 						0
@@ -233,7 +337,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ALL_BUILD-RelWithDebInfo-d0996f047d5098c52e18.json",
+					"jsonFile" : "target-ALL_BUILD-RelWithDebInfo-8cadd3ef252660792a78.json",
 					"name" : "ALL_BUILD",
 					"projectIndex" : 0
 				},
@@ -247,7 +351,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "raytracer::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-raytracer-RelWithDebInfo-cd419674178ac864743b.json",
+					"jsonFile" : "target-raytracer-RelWithDebInfo-56d7da0af635f1e3fde1.json",
 					"name" : "raytracer",
 					"projectIndex" : 0
 				}

@@ -1,0 +1,2 @@
+C:\Users\lenovo\repos\Fog_Tracer\build\Release\SDL2.dll
+C:\Users\lenovo\repos\Fog_Tracer\build\raytracer.dir\Release\raytracer.vcxproj.Up2Date
