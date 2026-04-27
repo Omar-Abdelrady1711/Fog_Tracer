@@ -14,6 +14,8 @@
 #include "plane.h"
 #include "material.h"
 #include "light.h"
+#include "fog.h"
+#include "box.h"
 
 // =============================================================================
 //  Image / window settings
@@ -22,9 +24,8 @@ static constexpr int IMAGE_WIDTH  = 800;
 static constexpr int IMAGE_HEIGHT = 450;
 static constexpr double ASPECT_RATIO = static_cast<double>(IMAGE_WIDTH) / IMAGE_HEIGHT;
 
-// Preview renders at half resolution for speed while moving
-static constexpr int PREVIEW_SCALE = 3;   // divides resolution during movement
-static constexpr int AA_SAMPLES    = 4;   // 2x2 grid AA for full render
+static constexpr int PREVIEW_SCALE = 3;
+static constexpr int AA_SAMPLES    = 4;
 
 // =============================================================================
 //  writePPM
@@ -71,8 +72,39 @@ Scene buildScene() {
         Vec3(0.6,0.35,0.6), 0.35,
         Material::shiny(Vec3(0.95,0.95,0.9), 64.0)));
 
-    scene.addLight(Light::make(Vec3(-3,6,2),  Vec3(1.0,0.95,0.85)));
-    scene.addLight(Light::make(Vec3(4,3,1),   Vec3(0.25,0.3,0.4)));
+
+    // -----------------------------------------------------------------------------
+    // Window-slit blockers for god rays
+    // Layout: camera -> objects -> window blockers -> strong back light
+    // -----------------------------------------------------------------------------
+
+    Material darkPanel = Material::matte(Vec3(0.015, 0.015, 0.018));
+
+    // vertical window bars / wall panels
+    scene.add(std::make_shared<Box>(
+        Vec3(-3.2, 0.0, -4.8), Vec3(-2.2, 5.0, -4.55), darkPanel));
+
+    scene.add(std::make_shared<Box>(
+        Vec3(-0.45, 0.0, -4.8), Vec3(0.45, 5.0, -4.55), darkPanel));
+
+    scene.add(std::make_shared<Box>(
+        Vec3(2.2, 0.0, -4.8), Vec3(3.2, 5.0, -4.55), darkPanel));
+
+    // optional top panel, makes it look more like a window
+    scene.add(std::make_shared<Box>(
+        Vec3(-3.4, 4.3, -4.8), Vec3(3.4, 5.2, -4.55), darkPanel));
+
+    // Strong warm “sun” behind the window
+    scene.addLight(Light::make(
+        Vec3(0.8, 5.4, -8.5),
+        Vec3(28.0, 23.0, 15.0)
+    ));
+
+    // Very weak fill light
+    scene.addLight(Light::make(
+        Vec3(-4.0, 3.0, 4.0),
+        Vec3(0.04, 0.05, 0.06)
+    ));
 
     return scene;
 }
@@ -84,7 +116,8 @@ void renderToBuffer(std::vector<Vec3>& pixels,
                     int width, int height,
                     const Camera& cam,
                     const Scene& scene,
-                    int samples)
+                    int samples,
+                    const Fog* fog = nullptr)
 {
     for (int row = 0; row < height; ++row)
         for (int col = 0; col < width; ++col) {
@@ -92,13 +125,13 @@ void renderToBuffer(std::vector<Vec3>& pixels,
             if (samples == 1) {
                 double s = (col + 0.5) / width;
                 double t = (row + 0.5) / height;
-                color = Renderer::rayColor(cam.getRay(s, t), scene);
+                color = Renderer::rayColor(cam.getRay(s, t), scene, 0, fog);
             } else {
                 for (int sy = 0; sy < 2; ++sy)
                     for (int sx = 0; sx < 2; ++sx) {
                         double s = (col + (sx+0.5)*0.5) / width;
                         double t = (row + (sy+0.5)*0.5) / height;
-                        color += Renderer::rayColor(cam.getRay(s, t), scene);
+                        color += Renderer::rayColor(cam.getRay(s, t), scene, 0, fog);
                     }
                 color = color / (double)samples;
             }
@@ -118,7 +151,6 @@ void renderToBuffer(std::vector<Vec3>& pixels,
 #endif
 
 int main(int argc, char* argv[]) {
-    // ── SDL init ──────────────────────────────────────────────────────────────
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cerr << "[error] SDL_Init: " << SDL_GetError() << "\n";
         return 1;
@@ -137,27 +169,25 @@ int main(int argc, char* argv[]) {
         SDL_TEXTUREACCESS_STREAMING,
         IMAGE_WIDTH, IMAGE_HEIGHT);
 
-    // Capture mouse for look-around
     SDL_SetRelativeMouseMode(SDL_TRUE);
 
-    // ── Scene ─────────────────────────────────────────────────────────────────
+    // ── Scene + Fog ───────────────────────────────────────────────────────────
     Scene scene = buildScene();
+    Fog fog(0.055, 2.5, 160, 22.0, 0.92);   // density, scattering, steps, distance
 
-    // ── Camera state ─────────────────────────────────────────────────────────
+    // ── Camera state ──────────────────────────────────────────────────────────
     Vec3   camPos(0, 2, 5);
-    double yaw   = -90.0;   // degrees, horizontal rotation
-    double pitch =  -15.0;  // degrees, vertical tilt
-    double moveSpeed  = 0.15;
-    double mouseSens  = 0.15;
+    double yaw   = -90.0;
+    double pitch =  -15.0;
+    double moveSpeed = 0.15;
+    double mouseSens = 0.15;
 
-    // Pixel buffers
     std::vector<Vec3>    pixels(IMAGE_WIDTH * IMAGE_HEIGHT);
     std::vector<uint8_t> rgb(IMAGE_WIDTH * IMAGE_HEIGHT * 3);
 
-    bool needsRender  = true;
-    bool fullQuality  = false;
+    bool needsRender = true;
+    bool fullQuality = false;
 
-    // ── Lambda: build Camera from current pos/yaw/pitch ──────────────────────
     auto makeCamera = [&]() {
         double yr = yaw   * (3.14159265358979 / 180.0);
         double pr = pitch * (3.14159265358979 / 180.0);
@@ -170,10 +200,9 @@ int main(int argc, char* argv[]) {
         return Camera(camPos, target, Vec3(0,1,0), 40.0, ASPECT_RATIO);
     };
 
-    // ── Lambda: copy Vec3 pixels → RGB bytes (SDL wants top-row first) ────────
     auto pixelsToRGB = [&](const std::vector<Vec3>& src, int w, int h) {
         for (int row = 0; row < h; ++row) {
-            int srcRow = h - 1 - row;   // flip vertically
+            int srcRow = h - 1 - row;
             for (int col = 0; col < w; ++col) {
                 Vec3 c = src[srcRow * w + col].clamped();
                 int idx = (row * w + col) * 3;
@@ -184,26 +213,22 @@ int main(int argc, char* argv[]) {
         }
     };
 
-    // ── Main loop ─────────────────────────────────────────────────────────────
     bool running = true;
     SDL_Event event;
     const uint8_t* keys = SDL_GetKeyboardState(nullptr);
 
     while (running) {
-        // ── Events ────────────────────────────────────────────────────────────
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) running = false;
 
             if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_ESCAPE) running = false;
-                // F = force full-quality re-render and save
                 if (event.key.keysym.sym == SDLK_f) {
-                    fullQuality  = true;
-                    needsRender  = true;
+                    fullQuality = true;
+                    needsRender = true;
                 }
             }
 
-            // Mouse look
             if (event.type == SDL_MOUSEMOTION) {
                 yaw   += event.motion.xrel * mouseSens;
                 pitch -= event.motion.yrel * mouseSens;
@@ -213,12 +238,10 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        // ── Keyboard movement ─────────────────────────────────────────────────
         SDL_PumpEvents();
         double yr = yaw * (3.14159265358979 / 180.0);
-
-        Vec3 forward(std::cos(yr), 0, std::sin(yr));   // horizontal forward
-        Vec3 right  = Vec3::cross(forward, Vec3(0,1,0)).normalized();
+        Vec3 forward(std::cos(yr), 0, std::sin(yr));
+        Vec3 right = Vec3::cross(forward, Vec3(0,1,0)).normalized();
 
         if (keys[SDL_SCANCODE_W]) { camPos += forward * moveSpeed; needsRender = true; fullQuality = false; }
         if (keys[SDL_SCANCODE_S]) { camPos -= forward * moveSpeed; needsRender = true; fullQuality = false; }
@@ -227,32 +250,24 @@ int main(int argc, char* argv[]) {
         if (keys[SDL_SCANCODE_E]) { camPos.y += moveSpeed;         needsRender = true; fullQuality = false; }
         if (keys[SDL_SCANCODE_Q]) { camPos.y -= moveSpeed;         needsRender = true; fullQuality = false; }
 
-        // ── Render if needed ──────────────────────────────────────────────────
         if (needsRender) {
             Camera cam = makeCamera();
 
             if (fullQuality) {
-                // Full resolution + AA
                 pixels.resize(IMAGE_WIDTH * IMAGE_HEIGHT);
-                renderToBuffer(pixels, IMAGE_WIDTH, IMAGE_HEIGHT, cam, scene, AA_SAMPLES);
+                renderToBuffer(pixels, IMAGE_WIDTH, IMAGE_HEIGHT, cam, scene, AA_SAMPLES, &fog);
                 rgb.resize(IMAGE_WIDTH * IMAGE_HEIGHT * 3);
                 pixelsToRGB(pixels, IMAGE_WIDTH, IMAGE_HEIGHT);
-
-                // Save to disk too
                 writePPM("output.ppm", pixels, IMAGE_WIDTH, IMAGE_HEIGHT);
-
                 SDL_UpdateTexture(texture, nullptr, rgb.data(), IMAGE_WIDTH * 3);
                 fullQuality = false;
             } else {
-                // Low resolution preview
                 int pw = IMAGE_WIDTH  / PREVIEW_SCALE;
                 int ph = IMAGE_HEIGHT / PREVIEW_SCALE;
-                std::vector<Vec3>    previewPx(pw * ph);
-                std::vector<uint8_t> previewRGB(pw * ph * 3);
+                std::vector<Vec3> previewPx(pw * ph);
 
-                renderToBuffer(previewPx, pw, ph, cam, scene, 1);
+                renderToBuffer(previewPx, pw, ph, cam, scene, 1, &fog);
 
-                // Scale back up to full window size (nearest neighbor)
                 rgb.resize(IMAGE_WIDTH * IMAGE_HEIGHT * 3);
                 for (int row = 0; row < IMAGE_HEIGHT; ++row)
                     for (int col = 0; col < IMAGE_WIDTH; ++col) {
@@ -273,13 +288,11 @@ int main(int argc, char* argv[]) {
             needsRender = false;
         }
 
-        // ── Draw ──────────────────────────────────────────────────────────────
         SDL_RenderClear(sdlRenderer);
         SDL_RenderCopy(sdlRenderer, texture, nullptr, nullptr);
         SDL_RenderPresent(sdlRenderer);
     }
 
-    // ── Cleanup ───────────────────────────────────────────────────────────────
     SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(sdlRenderer);
     SDL_DestroyWindow(window);

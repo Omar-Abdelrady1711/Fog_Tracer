@@ -2,10 +2,10 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\lenovo\repos\Fog_Tracer\build\x64\Release\ZERO_CHECK</FullPath>
+      <FullPath>C:\Users\PCAdmin\Fog_Tracer\build\x64\Release\ZERO_CHECK</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>C:\Users\lenovo\repos\Fog_Tracer\build\Release\raytracer.exe</FullPath>
+      <FullPath>C:\Users\PCAdmin\Fog_Tracer\build\Release\raytracer.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

@@ -1,6 +1,6 @@
-^C:\USERS\LENOVO\REPOS\FOG_TRACER\CMAKELISTS.TXT
+^C:\USERS\PCADMIN\FOG_TRACER\CMAKELISTS.TXT
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/lenovo/repos/Fog_Tracer -BC:/Users/lenovo/repos/Fog_Tracer/build --check-stamp-file C:/Users/lenovo/repos/Fog_Tracer/build/CMakeFiles/generate.stamp
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/PCAdmin/Fog_Tracer -BC:/Users/PCAdmin/Fog_Tracer/build --check-stamp-file C:/Users/PCAdmin/Fog_Tracer/build/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

@@ -1,3 +1,3 @@
-C:/Users/lenovo/repos/Fog_Tracer/build/CMakeFiles/raytracer.dir
-C:/Users/lenovo/repos/Fog_Tracer/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/lenovo/repos/Fog_Tracer/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/PCAdmin/Fog_Tracer/build/CMakeFiles/raytracer.dir
+C:/Users/PCAdmin/Fog_Tracer/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/PCAdmin/Fog_Tracer/build/CMakeFiles/ZERO_CHECK.dir
