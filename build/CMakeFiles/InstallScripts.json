@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"L:/Fog_Tracer/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

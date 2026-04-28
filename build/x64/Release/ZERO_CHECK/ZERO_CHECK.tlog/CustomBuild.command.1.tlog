@@ -1,6 +1,6 @@
-^C:\USERS\PCADMIN\FOG_TRACER\BUILD\CMAKEFILES\80E8B3164064C632CD80A753D7FDEA45\GENERATE.STAMP.RULE
+^L:\FOG_TRACER\BUILD\CMAKEFILES\4116FD815EF6C89CA546D633DA7BEE13\GENERATE.STAMP.RULE
 setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/PCAdmin/Fog_Tracer -BC:/Users/PCAdmin/Fog_Tracer/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/PCAdmin/Fog_Tracer/build/RayTracer.sln
+L:\bin\cmake.exe -SL:/Fog_Tracer -BL:/Fog_Tracer/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file L:/Fog_Tracer/build/RayTracer.sln
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

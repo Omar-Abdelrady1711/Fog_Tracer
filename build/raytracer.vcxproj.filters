@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\PCAdmin\Fog_Tracer\src\main.cpp">
+    <ClCompile Include="L:\Fog_Tracer\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\PCAdmin\Fog_Tracer\CMakeLists.txt" />
+    <CustomBuild Include="L:\Fog_Tracer\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{C8D51806-EBB9-3494-B9D3-FED5ED268146}</UniqueIdentifier>
+      <UniqueIdentifier>{1FA9CE25-D26F-3ACD-8D48-463250A11720}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

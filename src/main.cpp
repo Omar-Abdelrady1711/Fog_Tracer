@@ -17,19 +17,12 @@
 #include "fog.h"
 #include "box.h"
 
-// =============================================================================
-//  Image / window settings
-// =============================================================================
 static constexpr int IMAGE_WIDTH  = 800;
 static constexpr int IMAGE_HEIGHT = 450;
 static constexpr double ASPECT_RATIO = static_cast<double>(IMAGE_WIDTH) / IMAGE_HEIGHT;
-
 static constexpr int PREVIEW_SCALE = 3;
 static constexpr int AA_SAMPLES    = 4;
 
-// =============================================================================
-//  writePPM
-// =============================================================================
 void writePPM(const std::string& filename,
               const std::vector<Vec3>& pixels,
               int width, int height)
@@ -46,72 +39,102 @@ void writePPM(const std::string& filename,
     std::cout << "[info] saved " << filename << "\n";
 }
 
-// =============================================================================
-//  buildScene
-// =============================================================================
 Scene buildScene() {
     Scene scene;
 
+    // ── Floor — warm stone, slightly reflective ───────────────────────────────
     scene.add(std::make_shared<Plane>(
-        Vec3(0,0,0), Vec3(0,1,0),
-        Material::reflective(Vec3(0.7,0.7,0.75), 0.25, 32.0)));
+        Vec3(0, 0, 0), Vec3(0, 1, 0),
+        Material::reflective(Vec3(0.28, 0.24, 0.20), 0.22, 32.0)));
 
-    scene.add(std::make_shared<Sphere>(
-        Vec3(0,1,-1), 1.0,
-        Material::shiny(Vec3(0.85,0.2,0.15), 128.0)));
+    // ── Back wall ─────────────────────────────────────────────────────────────
+    scene.add(std::make_shared<Plane>(
+        Vec3(0, 0, -9), Vec3(0, 0, 1),
+        Material::matte(Vec3(0.20, 0.18, 0.15))));
 
-    scene.add(std::make_shared<Sphere>(
-        Vec3(-2.2,0.7,-1.5), 0.7,
-        Material::matte(Vec3(0.2,0.4,0.9))));
+    // ── Side walls ────────────────────────────────────────────────────────────
+    scene.add(std::make_shared<Plane>(
+        Vec3(-7, 0, 0), Vec3(1, 0, 0),
+        Material::matte(Vec3(0.18, 0.16, 0.13))));
 
-    scene.add(std::make_shared<Sphere>(
-        Vec3(2.2,0.7,-1.5), 0.7,
-        Material::reflective(Vec3(0.9,0.85,0.7), 0.8, 256.0)));
+    scene.add(std::make_shared<Plane>(
+        Vec3(7, 0, 0), Vec3(-1, 0, 0),
+        Material::matte(Vec3(0.18, 0.16, 0.13))));
 
-    scene.add(std::make_shared<Sphere>(
-        Vec3(0.6,0.35,0.6), 0.35,
-        Material::shiny(Vec3(0.95,0.95,0.9), 64.0)));
+    // ── Ceiling ───────────────────────────────────────────────────────────────
+    scene.add(std::make_shared<Plane>(
+        Vec3(0, 7, 0), Vec3(0, -1, 0),
+        Material::matte(Vec3(0.12, 0.11, 0.10))));
 
+    // ── Window wall — 3 narrow vertical slits ────────────────────────────────
+    Material wallMat = Material::matte(Vec3(0.02, 0.02, 0.02));
 
-    // -----------------------------------------------------------------------------
-    // Window-slit blockers for god rays
-    // Layout: camera -> objects -> window blockers -> strong back light
-    // -----------------------------------------------------------------------------
-
-    Material darkPanel = Material::matte(Vec3(0.015, 0.015, 0.018));
-
-    // vertical window bars / wall panels
+    // Far left panel
     scene.add(std::make_shared<Box>(
-        Vec3(-3.2, 0.0, -4.8), Vec3(-2.2, 5.0, -4.55), darkPanel));
+        Vec3(-7.0, 0.0, -8.2), Vec3(-3.2, 7.0, -7.6), wallMat));
+
+    // Left-center divider
+    scene.add(std::make_shared<Box>(
+        Vec3(-1.6, 0.0, -8.2), Vec3(-0.5, 7.0, -7.6), wallMat));
+
+    // Center-right divider
+    scene.add(std::make_shared<Box>(
+        Vec3(0.5, 0.0, -8.2), Vec3(1.6, 7.0, -7.6), wallMat));
+
+    // Far right panel
+    scene.add(std::make_shared<Box>(
+        Vec3(3.2, 0.0, -8.2), Vec3(7.0, 7.0, -7.6), wallMat));
+
+    // Top panel — slits only go up to y=4.8
+    scene.add(std::make_shared<Box>(
+        Vec3(-7.0, 4.8, -8.2), Vec3(7.0, 7.0, -7.6), wallMat));
+
+    // ── Spheres ───────────────────────────────────────────────────────────────
+    // Left — shiny blue
+    scene.add(std::make_shared<Sphere>(
+        Vec3(-2.8, 0.65, -4.2), 0.65,
+        Material::shiny(Vec3(0.15, 0.28, 0.95), 128.0)));
+
+    // Center — shiny red (largest, focal point)
+    scene.add(std::make_shared<Sphere>(
+        Vec3(0.0, 0.80, -3.8), 0.80,
+        Material::shiny(Vec3(0.95, 0.10, 0.08), 160.0)));
+
+    // Right — mirror sphere
+    scene.add(std::make_shared<Sphere>(
+        Vec3(2.8, 0.65, -4.2), 0.65,
+        Material::reflective(Vec3(0.92, 0.90, 0.85), 0.88, 256.0)));
+
+    // ── Crates — one on each side, visible and lit ────────────────────────────
+    scene.add(std::make_shared<Box>(
+        Vec3(-5.8, 0.0, -4.0), Vec3(-4.2, 0.90, -2.6),
+        Material::shiny(Vec3(0.55, 0.38, 0.20), 32.0)));
 
     scene.add(std::make_shared<Box>(
-        Vec3(-0.45, 0.0, -4.8), Vec3(0.45, 5.0, -4.55), darkPanel));
+        Vec3(4.2, 0.0, -4.0), Vec3(5.8, 0.90, -2.6),
+        Material::shiny(Vec3(0.55, 0.38, 0.20), 32.0)));
 
-    scene.add(std::make_shared<Box>(
-        Vec3(2.2, 0.0, -4.8), Vec3(3.2, 5.0, -4.55), darkPanel));
-
-    // optional top panel, makes it look more like a window
-    scene.add(std::make_shared<Box>(
-        Vec3(-3.4, 4.3, -4.8), Vec3(3.4, 5.2, -4.55), darkPanel));
-
-    // Strong warm “sun” behind the window
+    // ── 3 lights — one per slit, far back and high ────────────────────────────
     scene.addLight(Light::make(
-        Vec3(0.8, 5.4, -8.5),
-        Vec3(28.0, 23.0, 15.0)
-    ));
+        Vec3(-2.8, 8.5, -14.0),
+        Vec3(60.0, 48.0, 28.0)));
 
-    // Very weak fill light
     scene.addLight(Light::make(
-        Vec3(-4.0, 3.0, 4.0),
-        Vec3(0.04, 0.05, 0.06)
-    ));
+        Vec3(0.0, 8.5, -14.0),
+        Vec3(60.0, 48.0, 28.0)));
+
+    scene.addLight(Light::make(
+        Vec3(2.8, 8.5, -14.0),
+        Vec3(60.0, 48.0, 28.0)));
+
+    // Tiny ambient so room isn't pitch black
+    scene.addLight(Light::make(
+        Vec3(0.0, 5.0, 4.0),
+        Vec3(0.07, 0.06, 0.05)));
 
     return scene;
 }
 
-// =============================================================================
-//  Render into a pixel buffer
-// =============================================================================
 void renderToBuffer(std::vector<Vec3>& pixels,
                     int width, int height,
                     const Camera& cam,
@@ -139,9 +162,6 @@ void renderToBuffer(std::vector<Vec3>& pixels,
         }
 }
 
-// =============================================================================
-//  main  —  SDL2 interactive viewer
-// =============================================================================
 #ifdef _WIN32
 #include <SDL.h>
 #pragma comment(lib, "SDL2.lib")
@@ -171,14 +191,13 @@ int main(int argc, char* argv[]) {
 
     SDL_SetRelativeMouseMode(SDL_TRUE);
 
-    // ── Scene + Fog ───────────────────────────────────────────────────────────
     Scene scene = buildScene();
-    Fog fog(0.055, 2.5, 160, 22.0, 0.92);   // density, scattering, steps, distance
+    Fog fog(0.010, 6.5, 64, 22.0, 0.88);
 
-    // ── Camera state ──────────────────────────────────────────────────────────
-    Vec3   camPos(0, 2, 5);
+    // Camera looking straight at the window wall
+    Vec3   camPos(0.0, 2.5, 5.5);
     double yaw   = -90.0;
-    double pitch =  -15.0;
+    double pitch = -10.0;
     double moveSpeed = 0.15;
     double mouseSens = 0.15;
 
@@ -197,7 +216,7 @@ int main(int argc, char* argv[]) {
             std::cos(pr) * std::sin(yr)
         );
         Vec3 target = camPos + forward;
-        return Camera(camPos, target, Vec3(0,1,0), 40.0, ASPECT_RATIO);
+        return Camera(camPos, target, Vec3(0,1,0), 60.0, ASPECT_RATIO);
     };
 
     auto pixelsToRGB = [&](const std::vector<Vec3>& src, int w, int h) {
@@ -220,7 +239,6 @@ int main(int argc, char* argv[]) {
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) running = false;
-
             if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_ESCAPE) running = false;
                 if (event.key.keysym.sym == SDLK_f) {
@@ -228,7 +246,6 @@ int main(int argc, char* argv[]) {
                     needsRender = true;
                 }
             }
-
             if (event.type == SDL_MOUSEMOTION) {
                 yaw   += event.motion.xrel * mouseSens;
                 pitch -= event.motion.yrel * mouseSens;
@@ -252,7 +269,6 @@ int main(int argc, char* argv[]) {
 
         if (needsRender) {
             Camera cam = makeCamera();
-
             if (fullQuality) {
                 pixels.resize(IMAGE_WIDTH * IMAGE_HEIGHT);
                 renderToBuffer(pixels, IMAGE_WIDTH, IMAGE_HEIGHT, cam, scene, AA_SAMPLES, &fog);
@@ -265,9 +281,7 @@ int main(int argc, char* argv[]) {
                 int pw = IMAGE_WIDTH  / PREVIEW_SCALE;
                 int ph = IMAGE_HEIGHT / PREVIEW_SCALE;
                 std::vector<Vec3> previewPx(pw * ph);
-
                 renderToBuffer(previewPx, pw, ph, cam, scene, 1, &fog);
-
                 rgb.resize(IMAGE_WIDTH * IMAGE_HEIGHT * 3);
                 for (int row = 0; row < IMAGE_HEIGHT; ++row)
                     for (int col = 0; col < IMAGE_WIDTH; ++col) {
@@ -281,10 +295,8 @@ int main(int argc, char* argv[]) {
                         rgb[idx+1] = (uint8_t)(255.999 * c.y);
                         rgb[idx+2] = (uint8_t)(255.999 * c.z);
                     }
-
                 SDL_UpdateTexture(texture, nullptr, rgb.data(), IMAGE_WIDTH * 3);
             }
-
             needsRender = false;
         }
 

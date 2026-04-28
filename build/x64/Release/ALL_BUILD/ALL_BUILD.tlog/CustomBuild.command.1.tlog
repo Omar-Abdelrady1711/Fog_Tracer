@@ -1,6 +1,6 @@
-^C:\USERS\PCADMIN\FOG_TRACER\CMAKELISTS.TXT
+^L:\FOG_TRACER\CMAKELISTS.TXT
 setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/PCAdmin/Fog_Tracer -BC:/Users/PCAdmin/Fog_Tracer/build --check-stamp-file C:/Users/PCAdmin/Fog_Tracer/build/CMakeFiles/generate.stamp
+L:\bin\cmake.exe -SL:/Fog_Tracer -BL:/Fog_Tracer/build --check-stamp-file L:/Fog_Tracer/build/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
